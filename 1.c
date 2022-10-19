@@ -1,39 +1,41 @@
+/*to prevent unwanted warnings in visual studios*/
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+/*because of function isspace()*/
 #include <ctype.h>
 
 
 typedef struct  
 {
+    /*these sizes for names are **not** meaningful, just will probably work with expected data*/
     char ime[40];
     char prezime[40];
     int bodovi;
 } Student;
 
 int brojStudenta(char fileName[40]);
-void inputStudentData(char fileName[40], Student* Students, int n);
+/*writes data from file to our array of structure*/
+/*returns int to check if worked properly as file may fail to open*/
+int writeToStructStudentData(char fileName[40], Student* Students, int n);
 void outputStudentData(Student* Students, int n, int brojBodova);
 
 int main()
 {
     FILE* fp = NULL;
-    /*niz studenta*/
     Student* Students;
-    /*this is an arbitrary size for the file name*/
+    /*size of fileName is not meaningful*/
     char fileName[40];
     int studentCount = 0;
-    /*da se moze izracunati relativni broj bodova; not sure what's best value to set as
-    * should I set it to sth like 100 or fifty or ?
-    */
-    int maxPoints;
+    int maxPoints = 0;
+    /*to check if correctly added data to Students array; assume it doesn't*/
+    int returnValue = -1;
 
 
     printf("enter file name of student data: ");
     scanf("%s", fileName);
-    /*prints filename; could remove but idk*/
-    printf("file name: %s\n", fileName);
     printf("enter max nummber of points on kolokvij (more than 0): ");
     scanf("%d", &maxPoints);
 
@@ -42,22 +44,26 @@ int main()
 
     if (studentCount < 0) 
     {
-        printf("there was an error\n");
         /*what's the best way to deal with this situation?*/
         return -1;
-    } else if (studentCount == 0) {
+    } else if (studentCount == 0) 
+    {
         printf("error: zero students\n");
         return -1;
     }
 
-    printf("student count: %d\n", studentCount);
-
     /*allocate memory for the number of students in file*/
     Students = (Student*) malloc(sizeof(Student)*studentCount);
 
-    inputStudentData(fileName, Students, studentCount);
+    returnValue = writeToStructStudentData(fileName, Students, studentCount);
 
-    outputStudentData(Students, studentCount, maxPoints);
+    if (returnValue == 0)
+    {
+        outputStudentData(Students, studentCount, maxPoints);
+    } else 
+    {
+        printf("error: unable to store student data as wanted\n");
+    }
 
     return 0;
 }
@@ -73,15 +79,15 @@ int brojStudenta(char fileName[40])
 
     fp = fopen(fileName, "r");
     if (fp == NULL) {
-        printf("error: unable to open file %s", fileName);
-        /*is this a bad idea to use?*/
+        printf("error: unable to open file %s\n", fileName);
+        /*is this useful*/
+        fclose(fp);
         return -1;
     } 
 
-
     while ((ch = getc(fp)) != EOF)
     {
-        /*checks if this line empty (doesn't check if already know isn't)*/
+        /*checks if this line is empty (doesn't check if already know isn't)*/
         if (isEmptyLine && !isspace(lastCh))
         {
             isEmptyLine = false;
@@ -97,17 +103,17 @@ int brojStudenta(char fileName[40])
         lastCh = ch;
     }
 
-    /*adds one student if file didn't end with empty line*/
+    /*adds one student if file ended with nonempty line*/
     if (!isEmptyLine) {
         studentCount++;
     }
 
     fclose(fp);
-
     return studentCount;
 }
 
-void inputStudentData(char fileName[40], Student* Students, int n)
+/*returns -1 if unable to open file*/
+int writeToStructStudentData(char fileName[40], Student* Students, int n)
 {
     FILE* fp = NULL;
     /*used to count through students and add data*/
@@ -117,8 +123,8 @@ void inputStudentData(char fileName[40], Student* Students, int n)
 
     if (fp == NULL) 
     {
-        printf("error: unable to read file");
-        return;
+        printf("error: unable to open file\n");
+        return -1;
     }
 
     for (i = 0; i < n; i++)
@@ -126,16 +132,28 @@ void inputStudentData(char fileName[40], Student* Students, int n)
         fscanf(fp, " %s %s %d", Students[i].ime, Students[i].prezime, &(Students[i].bodovi));
     }
 
-
     fclose(fp);
-
+    return 0;
 }
 
 /*maybe should give cleaner, nicer output but hopefully it's fine*/
+/*returns 0 if no problems (not including maxPoints in wrong range)*/
 void outputStudentData(Student* Students, int n, int maxPoints)
 {
     int i = 0; 
     float relativePoints = 0;
+
+    printf("\n");
+    if (maxPoints <= 0)
+    {
+        printf("sorry there was an error with the number of max points\n");
+        printf("unable to print relative points\n\n");
+        for (i = 0; i < n; i++)
+        {
+            printf("name: %s, last name: %s, absolute points: %d\n", Students[i].ime, Students[i].prezime, 
+            Students[i].bodovi);
+        }
+    }
 
     for (i = 0; i < n; i++)
     {
@@ -143,6 +161,4 @@ void outputStudentData(Student* Students, int n, int maxPoints)
         printf("name: %s, last name: %s, absolute points: %d, relative points: %.2f\n", Students[i].ime, 
         Students[i].prezime, Students[i].bodovi, relativePoints);
     }
-
-
 }
