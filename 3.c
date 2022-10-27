@@ -1,181 +1,287 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
-#include <stdlib.h>														
-#include <string.h>	
-#include <ctype.h> //for tolower()																									
-#define MAX 64
+#include<stdio.h>
+#include<stdlib.h>														
+#include<string.h>
+#include<ctype.h>																												
+#define MAX (128)
+#define MAXLINE (1024)
 
-typedef struct Student* Pozicija;											
+struct _osoba;
+typedef struct _osoba* position;
 
-struct Student {															
-	char ime[MAX];
-	char prezime[MAX];
-	int godRod;
-	Pozicija next;
-};
+typedef struct _osoba {
+    char ime[MAX];
+    char prezime[MAX];
+    int godina_rodenja;
+    position next;
+}osoba;
 
-void UnosP(char* FName, char* LName, int birthYear, Pozicija P); //unos na pocetak
-void Ispis(Pozicija P);	//ispis liste					
-void UnosK(char* FName, char* LName, int birthYear, Pozicija P); //unos na kraj		
-Pozicija Trazi(char* LName, Pozicija P); //trazi po prezimenu	
-void Brisi(char* LName, Pozicija P); //brisi odredeni element
+//Funkcije
 
-Pozicija TraziP(char* LName, Pozicija P);	//trazi prethodnog		
+int DodajNaPocetak(position p, char* ime, char* prezime, int godina_rodenja); //A
+position StvoriOsobu(char* ime, char* prezime, int godina_rodenja); //pomocna
+int IspisListe(position p);  //B
+int DodajNaKraj(position p, char* ime, char* prezime, int godina_rodenja); //C
+position PronadiPrezime(position p, char* prezime); //D
+int BrisiOsobu(position p, char* prezime); //E
+position PronadiPrethodnog(position p, char* prezime);  //pomocna za E
+int UpisiUDatoteku(char* imedatoteke, position p);
+int IspisIzDatoteke(char* imedatoteke);
 
-void UnosIza(char* FName, char* LName, int birthYear, Pozicija P); //unos nakon nekog elementa
-void UnosIspred(char* FName, char* LName, int birthYear, Pozicija P); //unos prije nekog elementa
-void Sort(Pozicija P); //sortiraj listu po prezimenu
-void UpisUDat(Pozicija P, char* DatIme); //upis u datoteku 
-void IspisIzDat(Pozicija P, char* DatIme); //cita iz datoteke i ispise
+
 
 
 int main()
 {
-	char FName[MAX] = { 0 };
-	char LName[MAX] = { 0 };
-	int birthYear = 0;
-	char izb  = 0;	
-	struct Student Head;
-
-	Head.next = NULL;
-
-	//loop ends when user chooses q (quit)
-	while (izb != 'q') {
-		printf("Izaberite:\n p (unos na pocetak)\n k (unos na kraj)\n t (trazi po prezimenu)\n b (brisi odredeni element)\n i (ispis lite)\n q (quit)\n\n ");
-		scanf(" %c", &izb);
+    osoba head = { .ime = {0}, .prezime = {0}, .godina_rodenja = 0 };
+    //za unos
+    char izbor = { 0 };
+    char imeosobe[MAX] = { 0 };
+    char prezimeosobe[MAX] = { 0 };
+    int godinaosobe = 0;
+    char imedatoteke[MAX] = { 0 };
 
 
-		switch(izb) {
-			case 'q':
-				break;
-			case 'p': 
-				printf("\nUnesite ime studenta: ");
-				scanf(" %s", FName);
-				printf("Unesite prezime studenta: ");
-				scanf(" %s", LName);
-				printf("Unesite godinu rodenja studenta: ");
-				scanf("%d", &birthYear);
-				UnosP(FName, LName, birthYear, &Head);
-				printf("\n\n");
-				break;
-			case 'k': 
-				printf("\nUnesite ime studenta: ");
-				scanf(" %s", FName);
-				printf("Unesite prezime studenta: ");
-				scanf(" %s", LName);
-				printf("Unesite godinu rodenja studenta: ");
-				scanf("%d", &birthYear);
-				UnosK(FName, LName, birthYear, &Head);
-				printf("\n\n");
-				break;
-			case 't':
-				printf("\nUnesite prezime studenta: ");
-				scanf(" %s", LName);
-				Trazi(LName, Head.next);
-				printf("\n\n");
-				break;
-			case 'b':
-				printf("\nUnesite prezime studenta: ");
-				scanf(" %s", LName);
-				Brisi(LName, &Head);
-				printf("\n\n");
-				break;
-			case 'i':
-				Ispis(Head.next);
-				printf("\n\n");
-				break;
-			default: 
-				printf("\npogreska u unos");
-				printf("\n\n");
-				break;
-		}
-	}
+    while (1) {
+        printf("\nIzbornik:\nP - unos osobe na pocetak liste\nI - ispis liste\nK - unos osobe na kraj liste"
+            "\nT - trazenje osobe po prezimenu \nB - brisanje osobe iz liste po prezimenu"
+            "\nU - upis u datoteku"
+            "\nC - citanje iz datoteke"
+            "\nQ - kraj programa\n\n");
+        scanf(" %c", &izbor);
+
+        switch (toupper(izbor)) {
+        case 'P':
+            puts("Vrsi se unos osobe na pocetak liste.");
+            printf("\nUnesite ime osobe.\n");
+            scanf(" %s", imeosobe);
+            printf("\nUnesite prezime osobe.\n");
+            scanf(" %s", prezimeosobe);
+            printf("\nUnesite godinu rodenja.\n");
+            scanf("%d", &godinaosobe);
+
+            DodajNaPocetak(&head, imeosobe, prezimeosobe, godinaosobe);
+
+            printf("\nUspjesno dodana osoba na  pocetak liste.\n\n");
+            break;
+
+        case 'I':
+            puts("Vrsi se ispis liste:");
+            IspisListe(head.next);
+            break;
+
+        case 'K':
+            puts("Vrsi se unos osobe na kraj liste:");
+
+            printf("\nUnesite ime .\n");
+            scanf(" %s", imeosobe);
+            printf("\nUnesite prezime.\n");
+            scanf(" %s", prezimeosobe);
+            printf("\nUnesite godinu rodenja studenta.\n");
+            scanf("%d", &godinaosobe);
+
+            DodajNaKraj(&head, imeosobe, prezimeosobe, godinaosobe);
+
+            printf("\nUspjesno dodana osoba na kraj liste.\n\n");
+            break;
+
+        case 'T':
+            puts("Vrsi se trazenje studenta po prezimenu:");
+
+            printf("\nUnesite prezime:\n");
+            scanf(" %s", prezimeosobe);
+
+            PronadiPrezime(head.next, prezimeosobe);
+            break;
+
+        case 'B':
+            puts("Vrsi se brisanje studenta iz liste po prezimenu:");
+
+            printf("\nUnesite prezime za brisanje iz liste:\n");
+            scanf(" %s", prezimeosobe);
+
+            BrisiOsobu(&head, prezimeosobe);
+            break;
+
+        case 'Q':
+            puts("Kraj programa!\n");
+            return 1;
+            break;
+
+        case 'U':
+            printf("Ime datoteke:");
+            scanf("%s", imedatoteke);
+            UpisiUDatoteku(imedatoteke, head.next);
+            break;
+
+        case 'C':
+            printf("Ime datoteke:");
+            scanf("%s", imedatoteke);
+            IspisIzDatoteke(imedatoteke);
+        }
+
+        
+    }
 
 
     return 0;
 }
 
+position StvoriOsobu(char* ime, char* prezime, int godina_rodenja)
+{
+    position nova = NULL;
+    nova = (position)malloc(sizeof(osoba));        //alociraj memoriju
+    if (!nova) {
+        printf("Gre�ka pri alokaciji!\n");
+        return NULL;
+    }
+    strcpy(nova->ime, ime);                       //postavi vrijednosti
+    strcpy(nova->prezime, prezime);
+    nova->godina_rodenja = godina_rodenja;
+    nova->next = NULL;
 
-void UnosP(char* FName, char* LName, int birthYear, Pozicija P) {
-	Pozicija q = (Pozicija) malloc(sizeof(struct Student));
-
-	strcpy(q->ime, FName);
-	strcpy(q->prezime, LName);
-	q->godRod = birthYear;
-
-	q->next = P->next;
-	P->next = q;
-
+    return nova;
 }
 
-void UnosK(char* FName, char* LName, int birthYear, Pozicija P) {
-	Pozicija q = (Pozicija) malloc(sizeof(struct Student));
 
-	while (P->next != NULL) {
-		P = P -> next;
-	}
+int DodajNaPocetak(position p, char* ime, char* prezime, int godina_rodenja)   //prima head
+{
+    position q = NULL;
+    q = StvoriOsobu(ime, prezime, godina_rodenja);
 
-	strcpy(q->ime, FName);
-	strcpy(q->prezime, LName);
-	q->godRod = birthYear;
-
-	q->next = P->next;
-	P->next = q;
-
+    q->next = p->next;       //postavi pokazivace
+    p->next = q;
+    return 0;
 }
 
-void Ispis(Pozicija P) {
-	printf("\n\nIme\tPrezime\tGodina rodenja\n");
-	while (P != NULL) {
-		printf("%s\t%s\t%d.\n", P->ime, P->prezime, P->godRod);
-		P = P->next;
-	}
+int IspisListe(position p)     //prima head.next
+{
+
+    if (p == NULL) {
+        printf("Prazna lista!\n");
+
+    }
+    else
+        printf("Ime		 Prezime	Godina rodenja\n");
+    while (p != NULL) {
+        printf("%-8s\t %-8s\t %8d\n", p->ime, p->prezime, p->godina_rodenja);
+        p = p->next;
+    }
+
+    return 0;
 }
 
-Pozicija Trazi(char* LName, Pozicija P) {
-	int count = 1;
+int DodajNaKraj(position p, char* ime, char* prezime, int godina_rodenja)  //prima head
+{
+    position q = NULL;
+    while (p->next != NULL) {      //nadi zadnjeg
+        p = p->next;
+    }
+    q = StvoriOsobu(ime, prezime, godina_rodenja);
+    q->next = p->next;
+    p->next = q;
 
-	while (P != NULL && strcmp(LName, P->prezime)) {
-		P = P->next;
-		count++;
-	}
-
-	if (P == NULL) {
-		printf("Nije pronaden student s prezimenom %s", LName);
-		return NULL;
-	} else {
-		printf("pronaden student s prezimenom %s na %d. mjestu u listi", LName, count);
-		return P;
-	}
+    return 0;
 }
 
-Pozicija TraziP(char* LName, Pozicija P) {
-	Pozicija prev = P;
-	P = P->next;
+position PronadiPrezime(position p, char* prezime)  //prima head.next
+{
+    int br = 1;  //za mjesto u listi
 
-	while (P != NULL && strcmp(P->prezime, LName)) {
-		prev = P;
-		P = P->next;
-	}
+    while (p != NULL && strcmp(p->prezime, prezime)) {	//strcmp = 0 ako jednaki str1,str2					
+        p = p->next;
+        br++;
+    }
 
-	if (P == NULL) {
-		printf("Nema studenta s prezimenom %s", LName);
-		return NULL;
-	} else {
-		return prev;
-	}
-}					
-
-
-void Brisi(char* LName, Pozicija P) {
-	Pozicija prev;
-
-	prev = TraziP(LName, P);
-	
-	if (prev != NULL) {
-		P = prev->next;														
-		prev->next = P->next;
-		free(P);													
-	}
+    if (p == NULL) {
+        printf("\nOsoba prezimena %s se ne nalazi unutar liste.\n", prezime);
+        return NULL;
+    }
+    else {
+        printf("\nOsoba %s %s (%d.) se nalazi na %d. mjestu u listi.\n", p->ime, p->prezime, p->godina_rodenja, br);
+        return p;
+    }
 }
 
+
+int BrisiOsobu(position p, char* prezime)  //prezime onoga koji se brise
+{
+    position prev = NULL;
+    prev = PronadiPrethodnog(p, prezime);
+
+    printf("\nOsoba%s %s (%d.) se izbrisala iz liste.\n", prev->next->ime, prev->next->prezime, prev->next->godina_rodenja);
+
+    if (prev != NULL) {
+        p = prev->next;
+        prev->next = p->next;
+        free(p);
+    }
+
+    return 0;
+}
+
+position PronadiPrethodnog(position p, char* prezime)
+{
+    position prev = p;
+    p = p->next;
+
+    while (p != NULL && strcmp(p->prezime, prezime)) {				  //pomicanje po listi sa 2 pokazivaca prev i p
+        prev = p;
+        p = p->next;
+    }
+
+    if (p == NULL) {
+        printf("\nOsoba prezimena %s se ne nalazi unutar liste.\n", prezime);
+        return NULL;
+    }
+
+    return prev;
+}
+
+//currently isnt working, doesnt write (properly) to file
+int UpisiUDatoteku(char* imedatoteke, position p)
+{
+
+    FILE* fp = NULL;
+
+    fp = fopen(imedatoteke, "w");
+
+    if (fp == NULL) {
+        printf("Greška u otvaranju!\n");
+        return -1;
+    }
+
+    while (p != NULL) {
+        fprintf(fp, "%s %s %d\n", p->ime, p->prezime, p->godina_rodenja);
+        p = p->next;
+    }
+    
+
+    fclose(fp);
+
+    return 0;
+}
+
+int IspisIzDatoteke(char* imedatoteke) {
+    FILE* fp = NULL;
+    char line[MAX] = { 0 };
+    char ime[MAX] = { 0 };
+    char prezime[MAX] = { 0 };
+    int godinaRodenja = 0;
+
+    fp = fopen(imedatoteke, "r");
+    if (fp == NULL) {
+        printf("Greška u otvaranju!\n");
+        return -1;
+    }
+
+    printf("Ime        Prezime      Godina rodenja:\n");
+    while (!feof(fp) {
+        fscanf(fp, "%s %s %d", ime, prezime, godinaRodenja);
+        printf("%s      %s      %d\n", ime, prezime, godinaRodenja);
+        
+    }
+    fclose(fp);
+    return 0;
+}
+ 
