@@ -35,7 +35,7 @@ int main()
 
 	//loop ends when user chooses q (quit)
 	while (izb != 'q') {
-		printf("Unesite p (unos na pocetak), k (unos na kraj), t (trazi po prezimenu), b (brisi odredeni element), i (ispis lite) ili q (quit): ");
+		printf("Izaberite:\n p (unos na pocetak)\n k (unos na kraj)\n t (trazi po prezimenu)\n b (brisi odredeni element)\n i (ispis lite)\n q (quit)\n\n ");
 		scanf(" %c", &izb);
 
 
@@ -50,6 +50,7 @@ int main()
 				printf("Unesite godinu rodenja studenta: ");
 				scanf("%d", &birthYear);
 				UnosP(FName, LName, birthYear, &Head);
+				printf("\n\n");
 				break;
 			case 'k': 
 				printf("\nUnesite ime studenta: ");
@@ -59,21 +60,27 @@ int main()
 				printf("Unesite godinu rodenja studenta: ");
 				scanf("%d", &birthYear);
 				UnosK(FName, LName, birthYear, &Head);
+				printf("\n\n");
 				break;
 			case 't':
 				printf("\nUnesite prezime studenta: ");
 				scanf(" %s", LName);
 				Trazi(LName, Head.next);
+				printf("\n\n");
+				break;
 			case 'b':
 				printf("\nUnesite prezime studenta: ");
 				scanf(" %s", LName);
 				Brisi(LName, &Head);
+				printf("\n\n");
 				break;
 			case 'i':
 				Ispis(Head.next);
+				printf("\n\n");
 				break;
 			default: 
 				printf("\npogreska u unos");
+				printf("\n\n");
 				break;
 		}
 	}
@@ -114,22 +121,24 @@ void UnosK(char *FName, char *LName, int birthYear, Pozicija P) {
 void Ispis(Pozicija P) {
 	printf("\n\nIme\tPrezime\tGodina rodenja\n");
 	while (P != NULL) {
-		printf("%s\t%s\t%d\n", P->ime, P->prezime, P->godRod);
+		printf("%s\t%s\t%d.\n", P->ime, P->prezime, P->godRod);
 		P = P->next;
 	}
-	printf("\n\n");
 }
 
 Pozicija Trazi(char *LName, Pozicija P) {
+	int count = 1;
+
 	while (P != NULL && strcmp(LName, P->prezime)) {
 		P = P->next;
+		count++;
 	}
 
 	if (P == NULL) {
-		printf("Nije pronaden student s prezimenom %s\n", LName);
+		printf("Nije pronaden student s prezimenom %s", LName);
 		return NULL;
 	} else {
-		printf("pronaden student s prezimenom %s\n", LName);
+		printf("pronaden student s prezimenom %s na %d. mjestu u listi", LName, count);
 		return P;
 	}
 }
@@ -144,7 +153,7 @@ Pozicija TraziP(char *LName, Pozicija P) {
 	}
 
 	if (P == NULL) {
-		printf("Nema studenta s prezimenom %s\n", LName);
+		printf("Nema studenta s prezimenom %s", LName);
 		return NULL;
 	} else {
 		return prev;
@@ -163,3 +172,4 @@ void Brisi(char *LName, Pozicija P) {
 		free(P);													
 	}
 }
+
