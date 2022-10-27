@@ -25,8 +25,8 @@ Pozicija TraziP(char* LName, Pozicija P);	//trazi prethodnog
 void UnosIza(char* FName, char* LName, int birthYear, Pozicija P); //unos nakon nekog elementa
 void UnosIspred(char* FName, char* LName, int birthYear, Pozicija P); //unos prije nekog elementa
 void Sort(Pozicija P); //sortiraj listu po prezimenu
-void IspisDat(Pozicija P, char* DatIme); //ispis u datoteku 
-void CitaDat(Pozicija P, char* DatIme); //cita iz datoteke
+void UpisUDat(Pozicija P, char* DatIme); //upis u datoteku 
+void IspisIzDat(Pozicija P, char* DatIme); //cita iz datoteke i ispise
 
 
 int main()
