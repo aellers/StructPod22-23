@@ -5,7 +5,7 @@
 #include <ctype.h> //for tolower()																									
 #define MAX 64
 
-typedef struct Student * Pozicija;											
+typedef struct Student* Pozicija;											
 
 struct Student {															
 	char ime[MAX];
@@ -14,13 +14,19 @@ struct Student {
 	Pozicija next;
 };
 
-void UnosP(char *FName, char *LName, int birthYear, Pozicija P); //unos na pocetak
+void UnosP(char* FName, char* LName, int birthYear, Pozicija P); //unos na pocetak
 void Ispis(Pozicija P);	//ispis liste					
-void UnosK(char *FName, char *LName, int birthYear, Pozicija P); //unos na kraj		
-Pozicija Trazi(char *LName, Pozicija P); //trazi po prezimenu	
-void Brisi(char *LName, Pozicija P); //brisi odredeni element
+void UnosK(char* FName, char* LName, int birthYear, Pozicija P); //unos na kraj		
+Pozicija Trazi(char* LName, Pozicija P); //trazi po prezimenu	
+void Brisi(char* LName, Pozicija P); //brisi odredeni element
 
-Pozicija TraziP(char *LName, Pozicija P);	//trazi prethodnog							
+Pozicija TraziP(char* LName, Pozicija P);	//trazi prethodnog		
+
+void UnosIza(char* FName, char* LName, int birthYear, Pozicija P); //unos nakon nekog elementa
+void UnosIspred(char* FName, char* LName, int birthYear, Pozicija P); //unos prije nekog elementa
+void Sort(Pozicija P); //sortiraj listu po prezimenu
+void IspisDat(Pozicija P, char* DatIme); //ispis u datoteku 
+void CitaDat(Pozicija P, char* DatIme); //cita iz datoteke
 
 
 int main()
@@ -90,7 +96,7 @@ int main()
 }
 
 
-void UnosP(char *FName, char *LName, int birthYear, Pozicija P) {
+void UnosP(char* FName, char* LName, int birthYear, Pozicija P) {
 	Pozicija q = (Pozicija) malloc(sizeof(struct Student));
 
 	strcpy(q->ime, FName);
@@ -102,7 +108,7 @@ void UnosP(char *FName, char *LName, int birthYear, Pozicija P) {
 
 }
 
-void UnosK(char *FName, char *LName, int birthYear, Pozicija P) {
+void UnosK(char* FName, char* LName, int birthYear, Pozicija P) {
 	Pozicija q = (Pozicija) malloc(sizeof(struct Student));
 
 	while (P->next != NULL) {
@@ -126,7 +132,7 @@ void Ispis(Pozicija P) {
 	}
 }
 
-Pozicija Trazi(char *LName, Pozicija P) {
+Pozicija Trazi(char* LName, Pozicija P) {
 	int count = 1;
 
 	while (P != NULL && strcmp(LName, P->prezime)) {
@@ -143,7 +149,7 @@ Pozicija Trazi(char *LName, Pozicija P) {
 	}
 }
 
-Pozicija TraziP(char *LName, Pozicija P) {
+Pozicija TraziP(char* LName, Pozicija P) {
 	Pozicija prev = P;
 	P = P->next;
 
@@ -161,7 +167,7 @@ Pozicija TraziP(char *LName, Pozicija P) {
 }					
 
 
-void Brisi(char *LName, Pozicija P) {
+void Brisi(char* LName, Pozicija P) {
 	Pozicija prev;
 
 	prev = TraziP(LName, P);
