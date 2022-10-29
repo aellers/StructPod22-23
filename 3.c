@@ -43,6 +43,8 @@ int main()
     int godinaosobe = 0;
     char imedatoteke[MAX] = { 0 };
     char prezimetrazenog[MAX] = { 0 };
+    //presume error until know there isn't
+    int status = 1;
 
 
     while (1) {
@@ -65,14 +67,19 @@ int main()
             printf("\nUnesite godinu rodenja.\n");
             scanf("%d", &godinaosobe);
 
-            DodajNaPocetak(&head, imeosobe, prezimeosobe, godinaosobe);
+            status = DodajNaPocetak(&head, imeosobe, prezimeosobe, godinaosobe);
 
             printf("\nUspjesno dodana osoba na  pocetak liste.\n\n");
             break;
 
-        case 'I':
+        case 'I': /////jererer
             puts("Vrsi se ispis liste:");
-            IspisListe(head.next);
+            if (head.next != NULL) {
+                status = IspisListe(head.next);
+            } else {
+                printf("Prazna lista!\n");
+            }
+            
             break;
 
         case 'K':
@@ -85,39 +92,50 @@ int main()
             printf("\nUnesite godinu rodenja studenta.\n");
             scanf("%d", &godinaosobe);
 
-            DodajNaKraj(&head, imeosobe, prezimeosobe, godinaosobe);
+            status = DodajNaKraj(&head, imeosobe, prezimeosobe, godinaosobe);
 
             printf("\nUspjesno dodana osoba na kraj liste.\n\n");
             break;
 
         case 'T':
-            puts("Vrsi se trazenje studenta po prezimenu:");
+            if (head.next != NULL) {
+                puts("Vrsi se trazenje studenta po prezimenu:");
 
-            printf("\nUnesite prezime:\n");
-            scanf(" %s", prezimeosobe);
+                printf("\nUnesite prezime:\n");
+                scanf(" %s", prezimeosobe);
 
-            PronadiPrezime(head.next, prezimeosobe);
+                status = (PronadiPrezime(head.next, prezimeosobe) != NULL) ? 0 : 1;
+                
+            } else {
+                printf("Prazna lista!\n");
+            }
+            
             break;
 
         case 'B':
-            puts("Vrsi se brisanje studenta iz liste po prezimenu:");
+            if (head.next != NULL) {
+                puts("Vrsi se brisanje studenta iz liste po prezimenu:");
 
-            printf("\nUnesite prezime za brisanje iz liste:\n");
-            scanf(" %s", prezimeosobe);
+                printf("\nUnesite prezime za brisanje iz liste:\n");
+                scanf(" %s", prezimeosobe);
 
-            BrisiOsobu(&head, prezimeosobe);
+                status = BrisiOsobu(&head, prezimeosobe);
+            } else {
+                printf("Prazna lista!\n");
+            }
+            
             break;
 
         case 'U':
             printf("Ime datoteke: ");
             scanf("%s", imedatoteke);
-            UpisiUDatoteku(imedatoteke, head.next);
+            status = UpisiUDatoteku(imedatoteke, head.next);
             break;
 
         case 'C':
             printf("Ime datoteke: ");
             scanf("%s", imedatoteke);
-            IspisIzDatoteke(imedatoteke);
+            status = IspisIzDatoteke(imedatoteke);
             break;
 
         case 'A':
@@ -130,7 +148,7 @@ int main()
                 scanf(" %s", prezimeosobe);
                 printf("\nUnesite godinu rodenja studenta.\n");
                 scanf("%d", &godinaosobe);
-                DodajIspred(&head, imeosobe, prezimeosobe, godinaosobe, prezimetrazenog);
+                status = DodajIspred(&head, imeosobe, prezimeosobe, godinaosobe, prezimetrazenog);
             } else {
                 printf("Prazna lista!\n");
             }
@@ -146,7 +164,7 @@ int main()
                 scanf(" %s", prezimeosobe);
                 printf("\nUnesite godinu rodenja studenta.\n");
                 scanf("%d", &godinaosobe);
-                DodajIza(head.next, imeosobe, prezimeosobe, godinaosobe, prezimetrazenog);
+                status = DodajIza(head.next, imeosobe, prezimeosobe, godinaosobe, prezimetrazenog);
             } else {
                 printf("Prazna lista!\n");
             }
@@ -161,7 +179,7 @@ int main()
             printf("Niste izabrali jednu od dozvoljenih opcija\n");
             break;
         }
-
+        printf("%s\n", (status == 0) ? "Success!" : "Error or empty list");
         
     }
 
@@ -201,10 +219,10 @@ int IspisListe(position p)     //prima head.next
 
     if (p == NULL) {
         printf("Prazna lista!\n");
-
-    }
-    else
+    } else {
         printf("Ime		 Prezime	Godina rodenja\n");
+    }
+
     while (p != NULL) {
         printf("%-8s\t %-8s\t %8d\n", p->ime, p->prezime, p->godina_rodenja);
         p = p->next;
@@ -280,7 +298,6 @@ position PronadiPrethodnog(position p, char* prezime)
     return prev;
 }
 
-//currently isnt working, doesnt write (properly) to file
 int UpisiUDatoteku(char* imedatoteke, position p)
 {
 
@@ -298,9 +315,7 @@ int UpisiUDatoteku(char* imedatoteke, position p)
         p = p->next;
     }
     
-
     fclose(fp);
-
     return 0;
 }
 
