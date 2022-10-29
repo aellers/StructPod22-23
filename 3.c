@@ -27,8 +27,8 @@ int BrisiOsobu(position p, char* prezime); //2E
 position PronadiPrethodnog(position p, char* prezime);  //pomocna za 2E
 int UpisiUDatoteku(char* imedatoteke, position p); //3E
 int IspisIzDatoteke(char* imedatoteke); //3E
-int DodajIza(position p, char* ime, char* prezime, int godina_rodenja, char* prezime_trazenog); //3A
 int DodajIspred(position p, char* ime, char* prezime, int godina_rodenja, char* prezime_trazenog); //3B
+int DodajIza(position p, char* ime, char* prezime, int godina_rodenja, char* prezime_trazenog); //3A
 
 
 
@@ -50,6 +50,7 @@ int main()
             "\nT - trazenje osobe po prezimenu \nB - brisanje osobe iz liste po prezimenu"
             "\nU - upis u datoteku"
             "\nC - citanje iz datoteke"
+            "\nA - unos prije elementa"
             "\nZ - unos nakon elementa"
             "\nQ - kraj programa\n\n");
         scanf(" %c", &izbor);
@@ -118,6 +119,22 @@ int main()
             scanf("%s", imedatoteke);
             IspisIzDatoteke(imedatoteke);
             break;
+
+        case 'A':
+            if (head.next != NULL) {
+                printf("Unesite prezime za unos nakon: ");
+                scanf(" %s", prezimetrazenog);
+                printf("\nUnesite ime.\n");
+                scanf(" %s", imeosobe);
+                printf("\nUnesite prezime.\n");
+                scanf(" %s", prezimeosobe);
+                printf("\nUnesite godinu rodenja studenta.\n");
+                scanf("%d", &godinaosobe);
+                DodajIspred(&head, imeosobe, prezimeosobe, godinaosobe, prezimetrazenog);
+            } else {
+                printf("Prazna lista!\n");
+            }
+            break;
         
         case 'Z':
             if (head.next != NULL) {
@@ -131,10 +148,10 @@ int main()
                 scanf("%d", &godinaosobe);
                 DodajIza(head.next, imeosobe, prezimeosobe, godinaosobe, prezimetrazenog);
             } else {
-                printf("Prazna lista, nema elemenata\n");
+                printf("Prazna lista!\n");
             }
             break;
-
+        
         case 'Q':
             puts("Kraj programa!\n");
             return 1;
@@ -310,6 +327,24 @@ int IspisIzDatoteke(char* imedatoteke) {
     return 0;
 }
 
+//p - &head
+int DodajIspred(position p, char* ime, char* prezime, int godina_rodenja, char* prezime_trazenog) {
+    position q = NULL;
+
+    p = PronadiPrethodnog(p, prezime_trazenog);
+
+    if (p == NULL) {
+        printf("\nOsoba prezimena %s se ne nalazi unutar liste.\n", prezime_trazenog);
+        return -1;
+    }
+
+    q = StvoriOsobu(ime, prezime, godina_rodenja);
+    q->next = p->next;
+    p->next = q;
+
+    return 0;
+}
+
  //prima head.next (zbog pronadiprezime())
 int DodajIza(position p, char* ime, char* prezime, int godina_rodenja, char* prezime_trazenog) {
     position q = NULL;
@@ -324,14 +359,6 @@ int DodajIza(position p, char* ime, char* prezime, int godina_rodenja, char* pre
     q = StvoriOsobu(ime, prezime, godina_rodenja);
     q->next = p->next;
     p->next = q;
-
-    return 0;
-}
-
-
-//not yet used
-int DodajIspred(position p, char* ime, char* prezime, int godina_rodenja, char* prezime_trazenog) {
-
 
     return 0;
 }
