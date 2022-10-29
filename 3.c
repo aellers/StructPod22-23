@@ -18,15 +18,15 @@ typedef struct _osoba {
 
 //Funkcije
 
-int DodajNaPocetak(position p, char* ime, char* prezime, int godina_rodenja); //A
+int DodajNaPocetak(position p, char* ime, char* prezime, int godina_rodenja); //2A
 position StvoriOsobu(char* ime, char* prezime, int godina_rodenja); //pomocna
-int IspisListe(position p);  //B
-int DodajNaKraj(position p, char* ime, char* prezime, int godina_rodenja); //C
-position PronadiPrezime(position p, char* prezime); //D
-int BrisiOsobu(position p, char* prezime); //E
-position PronadiPrethodnog(position p, char* prezime);  //pomocna za E
-int UpisiUDatoteku(char* imedatoteke, position p);
-int IspisIzDatoteke(char* imedatoteke);
+int IspisListe(position p);  //2B
+int DodajNaKraj(position p, char* ime, char* prezime, int godina_rodenja); //2C
+position PronadiPrezime(position p, char* prezime); //2D
+int BrisiOsobu(position p, char* prezime); //2E
+position PronadiPrethodnog(position p, char* prezime);  //pomocna za 2E
+int UpisiUDatoteku(char* imedatoteke, position p); //3E
+int IspisIzDatoteke(char* imedatoteke); //3E
 
 
 
@@ -73,7 +73,7 @@ int main()
         case 'K':
             puts("Vrsi se unos osobe na kraj liste:");
 
-            printf("\nUnesite ime .\n");
+            printf("\nUnesite ime.\n");
             scanf(" %s", imeosobe);
             printf("\nUnesite prezime.\n");
             scanf(" %s", prezimeosobe);
@@ -109,15 +109,19 @@ int main()
             break;
 
         case 'U':
-            printf("Ime datoteke:");
+            printf("Ime datoteke: ");
             scanf("%s", imedatoteke);
             UpisiUDatoteku(imedatoteke, head.next);
             break;
 
         case 'C':
-            printf("Ime datoteke:");
+            printf("Ime datoteke: ");
             scanf("%s", imedatoteke);
             IspisIzDatoteke(imedatoteke);
+
+        default:
+            printf("Niste izabrali jedan od dozvoljenih opcija\n");
+            break;
         }
 
         
@@ -275,10 +279,10 @@ int IspisIzDatoteke(char* imedatoteke) {
         return -1;
     }
 
-    printf("Ime        Prezime      Godina rodenja:\n");
-    while (!feof(fp) {
-        fscanf(fp, "%s %s %d", ime, prezime, godinaRodenja);
-        printf("%s      %s      %d\n", ime, prezime, godinaRodenja);
+    printf("Ime\t\tPrezime\t\tGodina rodenja:\n");
+    while (!feof(fp)) {
+        fscanf(fp, "%s %s %d", ime, prezime, &godinaRodenja);
+        printf("%-8s\t%-8s\t %8d\n", ime, prezime, godinaRodenja);
         
     }
     fclose(fp);
