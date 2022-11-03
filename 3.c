@@ -17,19 +17,21 @@ typedef struct _osoba {
 }osoba;
 
 //Funkcije
-
-int DodajNaPocetak(position p, char* ime, char* prezime, int godina_rodenja); //2A
+//2.zdk:
+int DodajNaPocetak(position p, char* ime, char* prezime, int godina_rodenja); //A
 position StvoriOsobu(char* ime, char* prezime, int godina_rodenja); //pomocna
-int IspisListe(position p);  //2B
-int DodajNaKraj(position p, char* ime, char* prezime, int godina_rodenja); //2C
-position PronadiPrezime(position p, char* prezime); //2D
-int BrisiOsobu(position p, char* prezime); //2E
-position PronadiPrethodnog(position p, char* prezime);  //pomocna za 2E
-int UpisiUDatoteku(char* imedatoteke, position p); //3E
-int IspisIzDatoteke(char* imedatoteke); //3E
-int DodajIspred(position p, char* ime, char* prezime, int godina_rodenja, char* prezime_trazenog); //3B
-int DodajIza(position p, char* ime, char* prezime, int godina_rodenja, char* prezime_trazenog); //3A
+int IspisListe(position p);  //B
+int DodajNaKraj(position p, char* ime, char* prezime, int godina_rodenja); //C
+position PronadiPrezime(position p, char* prezime); //D
+int BrisiOsobu(position p, char* prezime); //E
+position PronadiPrethodnog(position p, char* prezime);  //pomocna za E
 
+//3.zdk:
+int Sortiraj(position p); //C
+int UpisiUDatoteku(char* imedatoteke, position p); //D
+int IspisIzDatoteke(char* imedatoteke); //E
+int DodajIza(position p, char* ime, char* prezime, int godina_rodenja, char* prezime_trazenog); // 3A
+int DodajIspred(position p, char* ime, char* prezime, int godina_rodenja, char* prezime_trazenog); // 3B
 
 
 
@@ -52,6 +54,7 @@ int main()
             "\nC - citanje iz datoteke"
             "\nA - unos prije elementa"
             "\nZ - unos nakon elementa"
+            "\nS - sortiranje liste po prezimenima"
             "\nQ - kraj programa\n\n");
         scanf(" %c", &izbor);
 
@@ -122,7 +125,7 @@ int main()
 
         case 'A':
             if (head.next != NULL) {
-                printf("Unesite prezime za unos nakon: ");
+                printf("Unesite prezime za unos prije: ");
                 scanf(" %s", prezimetrazenog);
                 printf("\nUnesite ime.\n");
                 scanf(" %s", imeosobe);
@@ -152,13 +155,20 @@ int main()
             }
             break;
         
+        case 'S':
+            printf("Vrsi se sortiranje liste po prezimenima.");
+
+            Sortiraj(&head);
+            printf("\nLista je uspjesno sortirana.\n\n");
+            break;
+
         case 'Q':
             puts("Kraj programa!\n");
             return 1;
             break;
 
         default:
-            printf("Niste izabrali jednu od dozvoljenih opcija\n");
+            printf("Niste izabrali ni jednu od ponudenih opcija!\n");
             break;
         }
 
@@ -324,6 +334,39 @@ int IspisIzDatoteke(char* imedatoteke) {
         
     }
     fclose(fp);
+    return 0;
+}
+
+int Sortiraj(position p)          //p head
+{
+
+    position i = p;
+    position j = NULL;
+    position k = NULL;
+    position temp = NULL;
+
+
+    while (i->next != k)
+    {
+        i = p;
+        j = i->next;
+        while (j->next != k)
+        {
+            if (strcmp(j->prezime, j->next->prezime) > 0)
+            {
+                temp = j->next;
+                i->next = temp;
+                j->next = temp->next;
+                temp->next = j;
+                j = temp;
+            }
+            i = j;
+            j = j->next;
+        }
+
+        k = j;
+    }
+
     return 0;
 }
 
