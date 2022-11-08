@@ -14,7 +14,6 @@ typedef struct _polinom {
 }polinom;
 
 int readFile(char* fileName, position p1, position p2);
-//change to sorted later
 position Unos(position p, int co, int ex);
 position NadiVeci(position p, int ex);
 int IspisPolinoma(position p);
@@ -98,7 +97,7 @@ position Unos(position p, int co, int ex) {
 	}
   	new = (position) malloc(sizeof(polinom));
 
-	//need to deal with what happens in this case in readFile
+
 	if (new == NULL) {
 		printf("Unable to allocate memory\n");
     	return NULL;
