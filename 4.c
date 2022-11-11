@@ -56,8 +56,8 @@ int main() {
 	printf("\n\n\n");
 
 	PomnoziPolinome(&head1, &head2,&headUmnozak);
-	IspisPolinoma(headUmnozak.next);
-	ZbrojiIsteEksponente(&headUmnozak);
+	IspisPolinoma(&headUmnozak);
+	ZbrojiIsteEksponente(headUmnozak.next);
 	printf("\n\n");
 	printf("Nakon zbrajanja istih eksp:\n\n\n");
 	IspisPolinoma(headUmnozak.next);
@@ -140,13 +140,16 @@ position Unos(position p, int co, int ex) {
 	return new;
 }
 
-//use with p = &head; just for testing if works 
+//use with p = &head 
 int IspisPolinoma(position p) {
 	while (p->next != NULL) {
-		//change format to be better later
-		printf("%dx^%d\n", p->next->coef, p->next->exp);
+		printf("%dx^%d", p->next->coef, p->next->exp);
 		p = p->next;
+		if (p->next != NULL) {
+			printf(" + ");
+		}
 	}
+	printf("\n");
 	return 0;
 }
 
@@ -162,7 +165,7 @@ int PomnoziPolinome(position p1, position p2, position headZbroj)
 
 
 	if (p1 == NULL || p2 == NULL || headZbroj== NULL) {	
-		printf("GRE�KA! Jedan od pokazivaca na polinom je NULL");
+		printf("GREŠKA! Jedan od pokazivaca na polinom je NULL");
 		return -1;
 	}
 
@@ -171,7 +174,7 @@ int PomnoziPolinome(position p1, position p2, position headZbroj)
 
 		while (p2 != NULL)
 		{
-			novi = (position)malloc(sizeof(polinom));
+			novi = (position) malloc(sizeof(polinom));
 
 			novi->exp = (p1->exp + p2->exp);	
 			novi->coef = (p1->coef * p2->coef);
