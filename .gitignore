@@ -53,3 +53,5 @@ dkms.conf
 
 #
 test
+.DS_Store
+.vscode/
