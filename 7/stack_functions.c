@@ -19,7 +19,7 @@ treeElPos push(stack* pStack, treeElPos el) {
 }
 
 
-treeElPos pop(stack* pStack) {
+treeElPos pop(stack* pStack) { //probably some error here
     treeElPos el = pStack->top->el;
 
     if (pStack->top->lastIn == NULL) {

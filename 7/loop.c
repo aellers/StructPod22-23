@@ -13,7 +13,6 @@ int mainLoop(stack* pStack, treeEl* rootPos) {
     treeElPos currentNode = rootPos; //where we are right now (used when moving around to create subdirectories)
     treeElPos thisNode = rootPos;
     treeElPos p = NULL; //not a new node// p and currentNode do the same thing, clean up
-    stackElPos lastIn = &(pStack->head);
 
     while (strcmp(command, "quit") != 0) {
         p = NULL;
@@ -37,9 +36,9 @@ int mainLoop(stack* pStack, treeEl* rootPos) {
                     push(pStack, thisNode);
                     thisNode = isSubdirectory(thisNode, dirName);
                 }
-            } else if (strcmp(command, "cd..") == 0) { //complicated and hard
+            } else if (strcmp(command, "cd..") == 0) { //sometimes works, sometimes returns null or gives an error
                 if (thisNode == rootPos) {
-                    puts("Stack is empty\n"); //test
+                    puts("Stack is empty\n"); 
                 } else {
                     thisNode = pop(pStack);
                 }
