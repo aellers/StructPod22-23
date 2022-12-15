@@ -2,14 +2,12 @@
 #define TREE_FUNCTIONS_H
 #include "structures.h"
 
-int createSubdirectory(nodePos p, char* dirName);
-int createDirectory(nodePos p, char* dirName);
-int listSubdirectories(nodePos node);
-int listCurrentDirectory(nodePos thisNode);
-nodePos isSubdirectory(nodePos thisNode, char* name);
+int createDir(treeElPos p, char* dirName);
+int createDira(treeElPos p, char* dirName); //will probably delete later
 
-nodePos findRightmost(nodePos thisNode);
-
+int listSubdirectories(treeElPos treeEl);
+int listCurrentDirectory(treeElPos thistreeEl);
+treeElPos isSubdirectory(treeElPos thistreeEl, char* name);
 
 
 #endif

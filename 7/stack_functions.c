@@ -1,28 +1,44 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "structures.h"
 
-//lastIn
-nodePos push(stackPos lastIn, nodePos el) {
-    stackPos q = NULL;
-    q = (stack*) malloc(sizeof(node));
+treeElPos push(stack* pStack, treeElPos el) {
+    stackElPos q = NULL;
+    q = (stackEl*) malloc(sizeof(treeEl));
     if (el == NULL || q == NULL) {
         return NULL;
     }
+    if (q == NULL) {
+        return NULL;
+    }
     q->el = el;
-    q->pointsTo = lastIn;
-    lastIn = q;
+    q->lastIn = pStack->top;
+    pStack->top = q;
+    return q->el;
+}
 
+
+treeElPos pop(stack* pStack) {
+    treeElPos el = pStack->top->el;
+
+    if (pStack->top->lastIn == NULL) {
+        return NULL;
+        printf("Empty stack\n");
+    }
+    pStack->top = pStack->top->lastIn;
+    free(pStack->top);
     return el;
 }
 
-//fix later? does it work now?
-nodePos pop(stackPos lastIn) {
-    nodePos returnValue = lastIn->el;
-    stackPos temp = NULL;
+int ispis(stack* pStack) {
     
-
-    //free();
-    *lastIn = *temp;
-    return returnValue;
+    stackElPos p = pStack->top;
+    puts("testA"); 
+    while (p->lastIn != NULL) {
+        printf("%s\n", (void*) p->el);
+        p = p->lastIn;
+    }
+    puts("");
+    return 0; 
 }

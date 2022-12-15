@@ -4,24 +4,29 @@
 #include "constants.h"
 
 
-typedef struct node node;
-typedef struct node* nodePos;
+typedef struct treeEl treeEl;
+typedef struct treeEl* treeElPos;
 
 //tree structure
-typedef struct node {
+typedef struct treeEl {
     char name[MAX_FILENAME_LENGTH];
-    nodePos nextSibling;
-    nodePos firstChild;
-} node;
+    treeElPos nextSibling;
+    treeElPos firstChild;
+} treeEl;
 
 //stack for traversal and output; stores pointers to nodes of tree
-typedef struct stack stack;
-typedef struct stack* stackPos;
+typedef struct stackEl stackEl;
+typedef struct stackEl* stackElPos;
+
+typedef struct stackEl {
+    treeElPos el;
+    stackElPos lastIn; //element put on stack before 
+} stackEl;
 
 typedef struct stack {
-    nodePos el;
-    //element put on stack before 
-    stackPos pointsTo;
+    stackEl head; 
+    stackElPos top;
 } stack;
+
 
 #endif 

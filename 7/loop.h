@@ -4,6 +4,6 @@
 
 #include "structures.h"
 
-int mainLoop(stackPos headPos, node* rightmost, node* rootPos);
+int mainLoop(stack* pStack, treeEl* rootPos);
 
 #endif
