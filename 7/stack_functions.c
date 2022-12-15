@@ -23,22 +23,21 @@ treeElPos pop(stack* pStack) { //probably some error here
     treeElPos el = pStack->top->el;
 
     if (pStack->top->lastIn == NULL) {
-        return NULL;
         printf("Empty stack\n");
+        return NULL;
     }
     pStack->top = pStack->top->lastIn;
     free(pStack->top);
     return el;
 }
 
-int ispis(stack* pStack) {
+/*int ispis(stack* pStack) {
     
     stackElPos p = pStack->top;
-    puts("testA"); 
     while (p->lastIn != NULL) {
         printf("%s\n", (void*) p->el);
         p = p->lastIn;
     }
     puts("");
     return 0; 
-}
+}*/

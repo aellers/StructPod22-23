@@ -33,12 +33,16 @@ int mainLoop(stack* pStack, treeEl* rootPos) {
                 if (strcmp(command, "md") == 0) { 
                     createDir(thisNode, dirName);
                 } else { //(strcmp(command, "cd") == 0)
-                    push(pStack, thisNode);
-                    thisNode = isSubdirectory(thisNode, dirName);
+                    if (thisNode->firstChild == NULL) {
+                        printf("No subdirectories of directory\n\n");
+                    } else {
+                        push(pStack, thisNode);
+                        thisNode = isSubdirectory(thisNode, dirName);
+                    }
                 }
             } else if (strcmp(command, "cd..") == 0) { //sometimes works, sometimes returns null or gives an error
                 if (thisNode == rootPos) {
-                    puts("Stack is empty\n"); 
+                    puts("Directory is not a subdirectory\n"); //Stack is empty
                 } else {
                     thisNode = pop(pStack);
                 }

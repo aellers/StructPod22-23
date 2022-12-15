@@ -9,7 +9,7 @@ treeElPos pop(stack* pStack);
 
 
 
-int ispis(stack* pStack); //just for debugging
+/*int ispis(stack* pStack);*/ //just for debugging
 
 
 #endif
