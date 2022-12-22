@@ -38,83 +38,22 @@ bool isValidEl(position root, int el, int n);
 
 //funkcije iz 9. vjezbe
 position insert(position root, int* niz, int n);
+int replace(position root); //each element's value becomes value of the sum of its left and right subtrees
+int rand(position root); //
+
+position deleteTree(position root); //probably useful
+
 
 int main()
 {
 	//dodavanje
 	char naredba[NAREDBA_MAX_LENGTH] = { 0 };
-	int el = -1; 
-	int n = 0; 
 	position root = NULL;
-	position p = NULL;
-	bool validEl = false; 
     int vrijednost[] = {2, 5, 7, 8, 11, 1, 4, 2, 3, 7};
     int i = 0; 
 
-    /*
-    root = dodajElement(root, vrijednost[0]);
-    for (i = 1; i < 10; i++)
-    {
-        dodajElement(root, vrijednost[i]);
-    }*/
-
-    root = insert(root, vrijednost, 10);
-
-	while (strcmp(naredba, "quit") != 0) {  
-		printf("\nOpcije:\n"
-			"dodaj [el] - dodaj broj u stablo\n" 
-			"preorder - preorder ispis\n"
-			"inorder - inorder ispis\n"
-			"postorder - postorder ispis\n"
-			"level - level order ispis\n"
-			"find [el] - pretrazi broj\n"
-			"delete [el] - izbrisi broj\n"
-			"quit - zavrsi program\n");
-
-			scanf(" %s", naredba);
-			
-			if (strcmp(naredba, "quit") == 0)
-				continue;
-
-			if (strcmp(naredba, "dodaj") == 0) {
-				n = scanf(" %d", &el);
-				validEl = isValidEl(root, el, n);
-				if (validEl == false)
-					printf("Ne dozvoljena vrijenost\n");
-					continue;
-				dodajElement(root, el);
-			} 
-			else if (strcmp(naredba, "preorder") == 0) {
-				preorder(root);
-			}  
-			else if (strcmp(naredba, "inorder") == 0) {
-				inorder(root);
-			}
-			else if (strcmp(naredba, "postorder") == 0) {
-				postorder(root);
-			} 
-			else if (strcmp(naredba, "level") == 0) {
-				levelorder(root);
-			}
-			else if (strcmp(naredba, "delete") == 0) {
-				scanf(" %d", &el);
-				root = delete(root, el);
-			} 
-			else if (strcmp(naredba, "find") == 0) {
-				scanf(" %d", &el);
-				p = pretrazi(root, el);
-				if (p == NULL) {
-					printf("Nema vrijednosti %d u stablu\n", el);
-				}
-				else {
-					printf("Element s vrijednost %d se nalazi na adresi %p\n", p->vrijednost, p);
-				}
-			}
-			else {
-				printf("Nepoznata naredba, pokusajte ponovo\n");
-			}
-			puts("");
-	}
+    root = insert(root, vrijednost, 10); //a)
+    
 	puts("");
 	
 
